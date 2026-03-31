@@ -15,7 +15,7 @@ Celem projektu jest stworzenie interpretera/transpilera, który pozwala na wykon
 
 ---
 
-## 2. Wymagania funkcjonalne (Wstępna wersja)
+## 2. Wymagania funkcjonalne 
 
 1. **Analiza leksykalna i składniowa:** Program musi poprawnie rozpoznawać tokeny i weryfikować składnię dla obsługiwanego podzbioru języka SQL.
 2. **Obsługa klauzuli SELECT:** Możliwość wyboru konkretnych kolumn (np. `SELECT imie, nazwisko`) lub wszystkich dostępnych kolumn (`SELECT *`).
