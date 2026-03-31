@@ -45,7 +45,7 @@ Celem projektu jest stworzenie interpretera/transpilera, który pozwala na wykon
 
 Zgodnie z wymogami projektu oraz bazując na zestawieniu z artykułu *Comparison of parser generators*,my dokonaliś analizy dostępnych narzędzi potrafiących wygenerować kod parsera w języku **Python**.
 
-Biorąc pod uwagę specyfikę języka Python oraz algorytmy parsowania, rozważano narzędzia wspierające generację kodu dla tego języka, takie jak ANTLR (LL(*)) oraz PLY (LALR(1)). 
+Biorąc pod uwagę specyfikę języka Python oraz algorytmy parsowania, rozważaliśmy narzędzia wspierające generację kodu dla tego języka, takie jak ANTLR (LL(*)) oraz PLY (LALR(1)). 
 
 **Decyzja:** Wybraliśmy narzędzie **PLY (Python Lex-Yacc)**.
 
