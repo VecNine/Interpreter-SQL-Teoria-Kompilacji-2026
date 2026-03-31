@@ -7,8 +7,8 @@
 **Temat projektu:** Kompilator źródło-źródło (transpiler) podzbioru języka SQL do języka Python z bezpośrednią obsługą plików CSV.
 
 **Autorzy:**
-* [Wiktor Bukowski] – `[wikbukowski@student.agh.edu.pl]`
-* [Jakub Bafia] – `[jbafia@student.agh.edu.pl]`
+* Wiktor Bukowski – `wikbukowski@student.agh.edu.pl`
+* Jakub Bafia – `jbafia@student.agh.edu.pl`
 
 **Ogólne cele programu:**
 Celem projektu jest stworzenie interpretera/transpilera, który pozwala na wykonywanie zapytań w języku SQL bezpośrednio na plikach tekstowych o rozszerzeniu `.csv`. Program przetłumaczy wejściowe zapytanie SQL na zoptymalizowany, natywny kod w języku Python, a następnie automatycznie go wykona, zwracając przefiltrowane i posortowane dane. Narzędzie ma ułatwić szybką analizę plików CSV bez konieczności importowania ich do klasycznych silników relacyjnych baz danych.
