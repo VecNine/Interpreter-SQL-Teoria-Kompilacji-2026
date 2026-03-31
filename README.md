@@ -43,13 +43,13 @@ Celem projektu jest stworzenie interpretera/transpilera, który pozwala na wykon
 
 ## 4. Wybór generatora parserów
 
-Zgodnie z wymogami projektu oraz bazując na zestawieniu z artykułu *Comparison of parser generators* (Wikipedia), dokonano analizy dostępnych narzędzi potrafiących wygenerować kod parsera w języku **Python** (język docelowy implementacji naszego kompilatora).
+Zgodnie z wymogami projektu oraz bazując na zestawieniu z artykułu *Comparison of parser generators*,my dokonaliś analizy dostępnych narzędzi potrafiących wygenerować kod parsera w języku **Python**.
 
 Biorąc pod uwagę specyfikę języka Python oraz algorytmy parsowania, rozważano narzędzia wspierające generację kodu dla tego języka, takie jak ANTLR (LL(*)) oraz PLY (LALR(1)). 
 
-**Decyzja:** Wybrano narzędzie **PLY (Python Lex-Yacc)**.
+**Decyzja:** Wybraliśmy narzędzie **PLY (Python Lex-Yacc)**.
 
 **Uzasadnienie:**
 * **Zgodność języka:** PLY jest napisany w całości w Pythonie i generuje kod w Pythonie, co idealnie wpisuje się w nasze wymagania niefunkcjonalne.
 * **Brak zewnętrznych zależności kompilacji:** W przeciwieństwie do np. ANTLR4, który do wygenerowania parsera wymaga środowiska Java (JRE), PLY korzysta z mechanizmów refleksji w Pythonie i buduje tabele parsowania "w locie" (lub cachuje je do plików), co znacznie ułatwia budowanie i uruchamianie projektu.
-* **Algorytm:** PLY wykorzystuje klasyczny algorytm LALR(1) (podobnie jak Yacc/Bison), co jest w pełni wystarczające do zbudowania gramatyki bezkontekstowej dla wybranego podzbioru języka SQL i dobrze realizuje edukacyjne założenia przedmiotu Teoria Kompilacji.
+* **Algorytm:** PLY wykorzystuje klasyczny algorytm LALR(1), co jest w pełni wystarczające do zbudowania gramatyki bezkontekstowej dla wybranego podzbioru języka SQL.
