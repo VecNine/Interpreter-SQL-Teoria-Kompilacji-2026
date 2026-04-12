@@ -82,45 +82,67 @@ W poniższej tabeli zestawiono wszystkie leksemy obsługiwane przez projektowany
 
 ### 5.2. Notacja generatora PLY
 
-Poniżej przedstawiono wyciąg z kodu definiujący kluczowe reguły skanera (zgodnie ze składnią biblioteki PLY, wykorzystującą *docstrings* jako deklaracje wyrażeń regularnych).
+Poniżej przedstawiono gramatykę zapisaną w notacji `YACC`:
 
-```python
-# Słownik słów kluczowych (zapewnia case-insensitivity)
-reserved = {
-    'select': 'SELECT', 'from': 'FROM', 'where': 'WHERE',
-    'order': 'ORDER', 'by': 'BY', 'asc': 'ASC', 'desc': 'DESC',
-    'limit': 'LIMIT', 'and': 'AND', 'or': 'OR'
-}
+```/* Deklaracja tokenów (terminali) */
+%token SELECT FROM WHERE ORDER BY ASC DESC LIMIT AND OR
+%token IDENTIFIER STRING INTEGER FLOAT
+%token EQUALS NOT_EQUALS GREATER LESS GREATER_EQUALS LESS_EQUALS
+%token ASTERISK COMMA
 
-# Definicje prostych operatorów i symboli
-t_COMMA          = r','
-t_ASTERISK       = r'\*'
-t_EQUALS         = r'='
-t_NOT_EQUALS     = r'!='
-t_GREATER_EQUALS = r'>='
-t_LESS_EQUALS    = r'<='
-t_GREATER        = r'>'
-t_LESS           = r'<'
+/* Definicja priorytetów operatorów logicznych */
+%left OR
+%left AND
 
-t_ignore = ' \t\n' # Ignorowane białe znaki
+%%
 
-# Reguły akcji semantycznych (kolejność ma znaczenie)
-def t_FLOAT(t):
-    r'-?\d+\.\d+'
-    t.value = float(t.value)
-    return t
+/* Reguły produkcji (gramatyka) */
 
-def t_INTEGER(t):
-    r'-?\d+'
-    t.value = int(t.value)
-    return t
+query
+    : SELECT column_list FROM STRING where_clause order_clause limit_clause
+    ;
 
-def t_STRING(t):
-    r'(\"[^\"]*\")|(\'[^\']*\')'
-    t.value = t.value[1:-1] # Usunięcie cudzysłowów
-    return t
+column_list
+    : ASTERISK
+    | IDENTIFIER
+    | column_list COMMA IDENTIFIER
+    ;
 
-def t_IDENTIFIER(t):
-    r'[a-zA-Z_][a-zA-Z0-9_]*'
-    t.type = reserved.get(t.value.lower(), 'IDENTIFIER')
-    return t
+where_clause
+    : WHERE condition
+    | /* empty */
+    ;
+
+condition
+    : condition AND condition
+    | condition OR condition
+    | IDENTIFIER operator value
+    ;
+
+operator
+    : EQUALS
+    | NOT_EQUALS
+    | GREATER
+    | LESS
+    | GREATER_EQUALS
+    | LESS_EQUALS
+    ;
+
+value
+    : INTEGER
+    | FLOAT
+    | STRING
+    ;
+
+order_clause
+    : ORDER BY IDENTIFIER ASC
+    | ORDER BY IDENTIFIER DESC
+    | /* empty */
+    ;
+
+limit_clause
+    : LIMIT INTEGER
+    | /* empty */
+    ;
+
+%%```
