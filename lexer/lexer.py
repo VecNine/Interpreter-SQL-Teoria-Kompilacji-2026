@@ -1,6 +1,6 @@
 import ply.lex as lex
 from ply.lex import LexToken
-from tokens_lexer import TOKENS, RESERVED
+from lexer.tokens_lexer import TOKENS, RESERVED
 
 tokens = TOKENS
 

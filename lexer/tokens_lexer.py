@@ -1,4 +1,3 @@
-
 RESERVED: dict = {
     'select': 'SELECT',
     'from': 'FROM',
@@ -27,4 +26,4 @@ TOKENS: list = [
 
     'ASTERISK',         # *
     'COMMA'             # ,
-] + list(reserved.values()) # Doklejenie wszystkich słów kluczowych do głównej listy
+] + list(RESERVED.values())
