@@ -79,3 +79,48 @@ W poniższej tabeli zestawiono wszystkie leksemy obsługiwane przez projektowany
 | | `STRING` | `"[^"]*"` \| `'[^']*'` | Np. `"dane.csv"`, `'Kowalski'` |
 | **Identyfikatory** | `IDENTIFIER` | `[a-zA-Z_][a-zA-Z0-9_]*` | Nazwy kolumn, np. `imie`, `wiek` |
 
+
+### 5.2. Notacja generatora PLY
+
+Poniżej przedstawiono wyciąg z kodu definiujący kluczowe reguły skanera (zgodnie ze składnią biblioteki PLY, wykorzystującą *docstrings* jako deklaracje wyrażeń regularnych).
+
+```python
+# Słownik słów kluczowych (zapewnia case-insensitivity)
+reserved = {
+    'select': 'SELECT', 'from': 'FROM', 'where': 'WHERE',
+    'order': 'ORDER', 'by': 'BY', 'asc': 'ASC', 'desc': 'DESC',
+    'limit': 'LIMIT', 'and': 'AND', 'or': 'OR'
+}
+
+# Definicje prostych operatorów i symboli
+t_COMMA          = r','
+t_ASTERISK       = r'\*'
+t_EQUALS         = r'='
+t_NOT_EQUALS     = r'!='
+t_GREATER_EQUALS = r'>='
+t_LESS_EQUALS    = r'<='
+t_GREATER        = r'>'
+t_LESS           = r'<'
+
+t_ignore = ' \t\n' # Ignorowane białe znaki
+
+# Reguły akcji semantycznych (kolejność ma znaczenie)
+def t_FLOAT(t):
+    r'-?\d+\.\d+'
+    t.value = float(t.value)
+    return t
+
+def t_INTEGER(t):
+    r'-?\d+'
+    t.value = int(t.value)
+    return t
+
+def t_STRING(t):
+    r'(\"[^\"]*\")|(\'[^\']*\')'
+    t.value = t.value[1:-1] # Usunięcie cudzysłowów
+    return t
+
+def t_IDENTIFIER(t):
+    r'[a-zA-Z_][a-zA-Z0-9_]*'
+    t.type = reserved.get(t.value.lower(), 'IDENTIFIER')
+    return t
