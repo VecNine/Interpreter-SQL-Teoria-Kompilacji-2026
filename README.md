@@ -53,3 +53,29 @@ Biorąc pod uwagę specyfikę języka Python oraz algorytmy parsowania, rozważa
 * **Zgodność języka:** PLY jest napisany w całości w Pythonie i generuje kod w Pythonie, co idealnie wpisuje się w nasze wymagania niefunkcjonalne.
 * **Brak zewnętrznych zależności kompilacji:** W przeciwieństwie do np. ANTLR4, który do wygenerowania parsera wymaga środowiska Java (JRE), PLY korzysta z mechanizmów refleksji w Pythonie i buduje tabele parsowania "w locie" (lub cachuje je do plików), co znacznie ułatwia budowanie i uruchamianie projektu.
 * **Algorytm:** PLY wykorzystuje klasyczny algorytm LALR(1), co jest w pełni wystarczające do zbudowania gramatyki bezkontekstowej dla wybranego podzbioru języka SQL.
+
+
+## 5. Analiza Leksykalna (Skaner i Tokeny)
+
+Skaner (Lexer) został zaimplementowany przy użyciu modułu `ply.lex` z biblioteki **PLY**. Ponieważ język SQL ignoruje wielkość liter (jest *case-insensitive*), nasz analizator leksykalny w pierwszej kolejności rozpoznaje ciągi znaków jako ogólne identyfikatory, a następnie – za pomocą słownika rzutowania – weryfikuje, czy należą one do zbioru słów kluczowych.
+
+### 5.1. Specyfikacja Tokenów
+
+W poniższej tabeli zestawiono wszystkie leksemy obsługiwane przez projektowany podzbiór języka SQL wraz z dopasowującymi je wyrażeniami regularnymi (RegEx).
+
+| Kategoria | Nazwa Tokenu (ID) | Wyrażenie Regularne | Przykłady / Opis |
+| :--- | :--- | :--- | :--- |
+| **Słowa kluczowe** | `SELECT`, `FROM`, `WHERE`, `ORDER`, `BY`, `ASC`, `DESC`, `LIMIT`, `AND`, `OR` | `(?i)^<slowo>$` | Ignorują wielkość liter (np. `SELECT`, `select`, `SeLeCt`). |
+| **Operatory** | `EQUALS` | `=` | Równość |
+| | `NOT_EQUALS` | `!=` | Nierówność |
+| | `GREATER_EQUALS` | `>=` | Większe lub równe |
+| | `LESS_EQUALS` | `<=` | Mniejsze lub równe |
+| | `GREATER` | `>` | Ostro większe |
+| | `LESS` | `<` | Ostro mniejsze |
+| **Symbole** | `ASTERISK` | `\*` | Wybór wszystkich kolumn |
+| | `COMMA` | `,` | Separator na liście kolumn |
+| **Literały i Typy** | `FLOAT` | `-?\d+\.\d+` | Np. `3.14`, `-0.5` |
+| | `INTEGER` | `-?\d+` | Np. `42`, `-7` |
+| | `STRING` | `"[^"]*"` \| `'[^']*'` | Np. `"dane.csv"`, `'Kowalski'` |
+| **Identyfikatory** | `IDENTIFIER` | `[a-zA-Z_][a-zA-Z0-9_]*` | Nazwy kolumn, np. `imie`, `wiek` |
+
