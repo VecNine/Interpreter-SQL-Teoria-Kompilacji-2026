@@ -1,5 +1,5 @@
 
-reserved: dict = {
+RESERVED: dict = {
     'select': 'SELECT',
     'from': 'FROM',
     'where': 'WHERE',
