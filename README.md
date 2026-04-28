@@ -40,34 +40,40 @@ W poniższej tabeli zestawiono wszystkie leksemy obsługiwane przez projektowany
 
 Poniżej przedstawiono gramatykę zapisaną w notacji `YACC`:
 
-```/* Deklaracja tokenów (terminali) */
+```/* Deklaracja tokenów */
 %token SELECT FROM WHERE ORDER BY ASC DESC LIMIT AND OR
+%token INSERT INTO VALUES CREATE DROP TABLE
+%token VARCHAR NUMERIC DATE DEFAULT CURRENT_DATE
 %token IDENTIFIER STRING INTEGER FLOAT
 %token EQUALS NOT_EQUALS GREATER LESS GREATER_EQUALS LESS_EQUALS
-%token ASTERISK COMMA SEMICOLON
+%token ASTERISK COMMA SEMICOLON LPAREN RPAREN
 
-/* Definicja priorytetów operatorów logicznych */
+/* Priorytety */
 %left OR
 %left AND
 
 %%
 
-/* Reguły produkcji (gramatyka) */
-
+/* Korzeń gramatyki */
 program
     : querylist
     | /* empty */
     ;
 
 querylist
-    :querylist query SEMICOLON
+    : querylist query SEMICOLON
     | query SEMICOLON
     ;
 
+/* Typy zapytań */
 query
     : SELECT column_list FROM STRING where_clause order_clause limit_clause
+    | DROP TABLE IDENTIFIER
+    | CREATE TABLE IDENTIFIER LPAREN column_list_def_create RPAREN
+    | INSERT INTO IDENTIFIER LPAREN column_list_args_insert RPAREN VALUES column_list_items_insert
     ;
 
+/* --- Logika SELECT --- */
 column_list
     : ASTERISK
     | IDENTIFIER
@@ -76,7 +82,7 @@ column_list
 
 where_clause
     : WHERE condition
-    | /* empty */
+    | empty
     ;
 
 condition
@@ -86,29 +92,54 @@ condition
     ;
 
 operator
-    : EQUALS
-    | NOT_EQUALS
-    | GREATER
-    | LESS
-    | GREATER_EQUALS
-    | LESS_EQUALS
+    : EQUALS | NOT_EQUALS | GREATER | LESS | GREATER_EQUALS | LESS_EQUALS
     ;
 
 value
-    : INTEGER
-    | FLOAT
-    | STRING
+    : INTEGER | FLOAT | STRING
     ;
 
 order_clause
     : ORDER BY IDENTIFIER ASC
     | ORDER BY IDENTIFIER DESC
-    | /* empty */
+    | empty
     ;
 
 limit_clause
     : LIMIT INTEGER
-    | /* empty */
+    | empty
     ;
 
-%%```
+/* --- Logika CREATE --- */
+column_list_def_create
+    : column_def_create
+    | column_list_def_create COMMA column_def_create
+    ;
+
+column_def_create
+    : IDENTIFIER VARCHAR LPAREN INTEGER RPAREN
+    | IDENTIFIER NUMERIC LPAREN INTEGER COMMA INTEGER RPAREN
+    | IDENTIFIER DATE DEFAULT CURRENT_DATE
+    | IDENTIFIER DATE
+    ;
+
+/* --- Logika INSERT --- */
+column_list_args_insert
+    : IDENTIFIER
+    | column_list_args_insert COMMA IDENTIFIER
+    ;
+
+column_list_items_insert
+    : LPAREN value_list RPAREN
+    | column_list_items_insert COMMA LPAREN value_list RPAREN
+    ;
+
+value_list
+    : value
+    | value_list COMMA value
+    ;
+
+/* Reguły pomocnicze */
+empty : ;
+
+%%
