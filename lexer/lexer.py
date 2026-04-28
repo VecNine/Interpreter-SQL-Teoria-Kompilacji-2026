@@ -4,7 +4,7 @@ from lexer.tokens_lexer import TOKENS, RESERVED
 
 tokens = TOKENS
 
-t_ignore = ' \t\n'
+t_ignore = ' \t'
 
 t_EQUALS         = r'='
 t_NOT_EQUALS     = r'!='
@@ -14,8 +14,13 @@ t_GREATER        = r'>'
 t_LESS           = r'<'
 t_ASTERISK       = r'\*'
 t_COMMA          = r','
+t_SEMICOLON      = r';'
 t_LPAREN         = r'\('
 t_RPAREN         = r'\)'
+
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
 
 def t_FLOAT(t) -> LexToken:
     r'\d+\.\d+'
