@@ -43,7 +43,7 @@ Poniżej przedstawiono gramatykę zapisaną w notacji `YACC`:
 %token SELECT FROM WHERE ORDER BY ASC DESC LIMIT AND OR
 %token IDENTIFIER STRING INTEGER FLOAT
 %token EQUALS NOT_EQUALS GREATER LESS GREATER_EQUALS LESS_EQUALS
-%token ASTERISK COMMA
+%token ASTERISK COMMA SEMICOLON
 
 /* Definicja priorytetów operatorów logicznych */
 %left OR
@@ -52,6 +52,16 @@ Poniżej przedstawiono gramatykę zapisaną w notacji `YACC`:
 %%
 
 /* Reguły produkcji (gramatyka) */
+
+program
+    : querylist
+    | /* empty */
+    ;
+
+querylist
+    :querylist query SEMICOLON
+    | query SEMICOLON
+    ;
 
 query
     : SELECT column_list FROM STRING where_clause order_clause limit_clause
