@@ -20,20 +20,18 @@ W poniższej tabeli zestawiono wszystkie leksemy obsługiwane przez projektowany
 
 | Kategoria | Nazwa Tokenu (ID) | Wyrażenie Regularne | Przykłady / Opis |
 | :--- | :--- | :--- | :--- |
-| **Słowa kluczowe** | `SELECT`, `FROM`, `WHERE`, `ORDER`, `BY`, `ASC`, `DESC`, `LIMIT`, `AND`, `OR` | `(?i)^<slowo>$` | Ignorują wielkość liter (np. `SELECT`, `select`, `SeLeCt`). |
-| **Operatory** | `EQUALS` | `=` | Równość |
-| | `NOT_EQUALS` | `!=` | Nierówność |
-| | `GREATER_EQUALS` | `>=` | Większe lub równe |
-| | `LESS_EQUALS` | `<=` | Mniejsze lub równe |
-| | `GREATER` | `>` | Ostro większe |
-| | `LESS` | `<` | Ostro mniejsze |
-| **Symbole** | `ASTERISK` | `\*` | Wybór wszystkich kolumn |
-| | `COMMA` | `,` | Separator na liście kolumn |
-| | `SEMICOLON` | `;` | Separator między podzapytaniami |
-| **Literały i Typy** | `FLOAT` | `-?\d+\.\d+` | Np. `3.14`, `-0.5` |
-| | `INTEGER` | `-?\d+` | Np. `42`, `-7` |
-| | `STRING` | `"[^"]*"` \| `'[^']*'` | Np. `"dane.csv"`, `'Kowalski'` |
-| **Identyfikatory** | `IDENTIFIER` | `[a-zA-Z_][a-zA-Z0-9_]*` | Nazwy kolumn, np. `imie`, `wiek` |
+| **Słowa kluczowe (DQL/Logika)** | `SELECT`, `FROM`, `WHERE`, `ORDER`, `BY`, `ASC`, `DESC`, `LIMIT`, `AND`, `OR` | `(?i)^<slowo>$` | Zapytania i filtrowanie (case-insensitive). |
+| **Słowa kluczowe (DDL/DML)** | `CREATE`, `DROP`, `INSERT`, `INTO`, `TABLE`, `VALUES` | `(?i)^<slowo>$` | Zarządzanie strukturą i danymi. |
+| **Typy i Atrybuty danych** | `VARCHAR`, `NUMERIC`, `DATE`, `DEFAULT`, `CURRENT_DATE` | `(?i)^<slowo>$` | Definicje kolumn (np. `VARCHAR(255)`, `NUMERIC(10,2)`). |
+| **Operatory** | `EQUALS`, `NOT_EQUALS`, `GREATER_EQUALS`, `LESS_EQUALS`, `GREATER`, `LESS` | `=`, `!=`, `>=`, `<=`, `>`, `<` | Operatory porównania i relacji. |
+| **Symbole** | `ASTERISK` | `\*` | Wybór wszystkich kolumn. |
+| | `COMMA` | `,` | Separator elementów na listach. |
+| | `SEMICOLON` | `;` | Znak kończący zapytanie. |
+| | `LPAREN`, `RPAREN` | `\(`, `\)` | Nawiasy (parametry typów, listy wartości). |
+| **Literały i Typy** | `FLOAT` | `-?\d+\.\d+` | Liczby zmiennoprzecinkowe, np. `3.14`, `-0.5`. |
+| | `INTEGER` | `-?\d+` | Liczby całkowite, np. `42`, `-7`. |
+| | `STRING` | `"[^"]*"` \| `'[^']*'` | Tekst w cudzysłowach lub apostrofach. |
+| **Identyfikatory** | `IDENTIFIER` | `[a-zA-Z_][a-zA-Z0-9_]*` | Nazwy tabel i kolumn, np. `users`, `first_name`. |
 
 
 ### Notacja generatora PLY
