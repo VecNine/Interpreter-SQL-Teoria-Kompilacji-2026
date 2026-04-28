@@ -1,5 +1,14 @@
 # Interpreter-SQL---Teoria-Kompilacji-2026
 
+# Założenia programu - CSV-SQL Transpiler - wstępny opis 
+
+* **Ogólne cele programu:** Stworzenie narzędzia do analizy i zarządzania danymi w plikach tekstowych. Program pozwala na wykonywanie operacji SQL (podzbiór obejmujący: `SELECT`, `INSERT`, `DELETE`, `CREATE` wraz z klauzulami `WHERE`, `ORDER BY` i `LIMIT`) bezpośrednio na plikach `.csv` bez użycia relacyjnych baz danych.
+* **Rodzaj translatora:** Kompilator źródło-źródło (transpiler) pełniący w trybie runtime rolę interpretera.
+* **Planowany wynik działania programu:** Transpiler języka SQL do zoptymalizowanego kodu w języku Python. Wynikiem jest automatyczne wykonanie wygenerowanego kodu, co skutkuje wyświetleniem danych w konsoli lub fizyczną modyfikacją struktury i zawartości plików CSV.
+* **Planowany język implementacji:** Python 3.12+.
+* **Sposób realizacji skanera/parsera:** Użycie generatora parserów **PLY (Python Lex-Yacc)**. Skaner realizowany za pomocą `ply.lex`, a parser w oparciu o algorytm LALR(1) przy użyciu `ply.yacc`.
+
+
 # CSV-SQL Transpiler
 
 ## 1. Informacje ogólne
