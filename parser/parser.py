@@ -7,9 +7,30 @@ precedence : tuple[tuple[str, str], tuple[str, str]] = (
     ('left', 'AND'),
 )
 
-def p_query(p) -> None:
+
+# =======================================
+#    GŁÓWNE REGUŁY (PROGRAM I LISTA)
+# =======================================
+
+def p_program(p) -> None:
+    '''program : querylist
+               | empty'''
+    p[0] = p[1]
+
+def p_querylist_single(p) -> None:
+    '''querylist : query SEMICOLON'''
+    p[0] = [p[1]]
+
+def p_querylist_multiple(p) -> None:
+    '''querylist : querylist query SEMICOLON'''
+    p[1].append(p[2])
+    p[0] = p[1]
+
+
+def p_query_select(p) -> None:
     '''query : SELECT column_list FROM STRING where_clause order_clause limit_clause'''
     p[0] = {
+        'type': 'SELECT',
         'select': p[2],
         'from': p[4],
         'where': p[5],
@@ -18,8 +39,9 @@ def p_query(p) -> None:
     }
 
 def p_query_drop_table(p) -> None:
-    '''query: DROP TABLE IDENTIFIER'''
+    '''query : DROP TABLE IDENTIFIER'''
     p[0] = {
+        'type': 'DROP',
         'action': 'DROP TABLE',
         'table_name': p[3]
     }
@@ -27,6 +49,7 @@ def p_query_drop_table(p) -> None:
 def p_query_create_table(p) -> None:
     '''query : CREATE TABLE IDENTIFIER LPAREN column_list_def_create RPAREN'''
     p[0] = {
+        'type': 'CREATE',
         'action': 'CREATE TABLE',
         'table_name': p[3],
         'columns': p[5]
@@ -35,6 +58,7 @@ def p_query_create_table(p) -> None:
 def p_query_insert_table(p) -> None:
     '''query : INSERT INTO IDENTIFIER LPAREN column_list_args_insert RPAREN VALUES column_list_items_insert'''
     p[0] = {
+        'type': 'INSERT',
         'action': 'INSERT',
         'table_name': p[3],
         'columns': p[5],
@@ -126,7 +150,7 @@ def p_limit_clause_empty(p) -> None:
     p[0] = None
 
 def p_limit_clause(p) -> None:
-    '''limit_clause : LIMIT INTEGER'''
+    """limit_clause : LIMIT INTEGER"""
     p[0] = p[2]
 
 

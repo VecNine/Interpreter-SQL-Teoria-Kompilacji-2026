@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Black">
-    <option name="sdkName" value="Python 3.14 (badania operacyjne)" />
+    <option name="sdkName" value="kompilatory" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.14 (Interpreter-SQL-Teoria-Kompilacji-2026)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="C:\Users\jakub\miniconda3" project-jdk-type="Python SDK" />
 </project>
