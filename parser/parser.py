@@ -33,8 +33,13 @@ def p_query_create_table(p) -> None:
     }
 
 def p_query_insert_table(p) -> None:
-    '''query: INSERT INTO INDENTIFIER LPAREN column_list_def_insert RPAREN'''
-
+    '''query : INSERT INTO IDENTIFIER LPAREN column_list_args_insert RPAREN VALUES column_list_items_insert'''
+    p[0] = {
+        'action': 'INSERT',
+        'table_name': p[3],
+        'columns': p[5],
+        'values': p[8]
+    }
 
 # =======================================
 
@@ -198,9 +203,38 @@ def p_column_list_def_create_multiple(p) -> None:
 #           REGUŁY INSERT
 # =======================================
 
-def p_column_list_def_insert_single(p) -> None:
-    '''column_list_def_insert : '''
+def p_value_list_single(p) -> None:
+    '''value_list : value'''
+    p[0] = [p[1]]
 
+def p_value_list_multiple(p) -> None:
+    '''value_list : value_list COMMA value'''
+    p[1].append(p[3])
+    p[0] = p[1]
+
+
+
+# ======= LISTY KOLUMN DLA ARGUMENTÓW ===========
+
+def p_column_list_args_insert_single(p) -> None:
+    '''column_list_args_insert : IDENTIFIER'''
+    p[0] = [p[1]]
+
+def p_column_list_args_insert_multiple(p) -> None:
+    '''column_list_args_insert : column_list_args_insert COMMA IDENTIFIER'''
+    p[1].append(p[3])
+    p[0] = p[1]
+
+# ======= LISTY KOLUMN DLA ITEMÓW ===========
+
+def p_column_list_items_insert_single(p) -> None:
+    '''column_list_items_insert : LPAREN value_list RPAREN'''
+    p[0] = [p[2]]
+
+def p_column_list_items_insert_multiple(p) -> None:
+    '''column_list_items_insert : column_list_items_insert COMMA LPAREN value_list RPAREN'''
+    p[1].append(p[4])
+    p[0] = p[1]
 
 
 parser = yacc.yacc()
