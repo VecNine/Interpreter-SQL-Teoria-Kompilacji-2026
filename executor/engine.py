@@ -28,3 +28,40 @@ class CSVEngine:
                 print(query)
         else:
             print("Brak zapytań do wyświetlenia.")
+
+    def execute(self):
+        print("execute")
+        if self.parsed:
+            for query in self.parsed:
+                match query['type']:
+                    case 'SELECT':
+                        self.select(query)
+                    case 'INSERT':
+                        self.insert(query)
+
+                    case 'CREATE':
+                        self.create(query)
+
+                    case 'DROP':
+                        self.drop(query)
+
+                    case 'DELETE':
+                        self.delete(query)
+
+        else:
+            print("Brak zapytań do wyświetlenia.")
+
+    def select(self,query):
+        print(query)
+
+    def insert(self, query):
+        print(query)
+
+    def create(self,query):
+        print(query)
+
+    def drop(self,query):
+        print(query)
+
+    def delete(self,query):
+        print(query)
