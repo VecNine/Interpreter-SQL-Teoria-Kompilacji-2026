@@ -17,6 +17,7 @@ RESERVED: dict = {
     'into': 'INTO',
     'values': 'VALUES',
     'delete': 'DELETE',
+    'drop': 'DROP',
 
     # Typy i własności
     'varchar': 'VARCHAR',
@@ -33,21 +34,22 @@ RESERVED: dict = {
 }
 
 TOKENS: list = [
-                   'IDENTIFIER',
-                   'STRING',
-                   'INTEGER',
-                   'FLOAT',
+    'IDENTIFIER',
+    'STRING',
+    'INTEGER',
+    'FLOAT',
 
-                   'EQUALS',  # =
-                   'NOT_EQUALS',  # !=
-                   'GREATER',  # >
-                   'LESS',  # <
-                   'GREATER_EQUALS',  # >=
-                   'LESS_EQUALS',  # <=
+    'EQUALS',          # =
+    'NOT_EQUALS',      # !=
+    'GREATER',         # >
+    'LESS',            # <
+    'GREATER_EQUALS',  # >=
+    'LESS_EQUALS',     # <=
 
-                   'ASTERISK',  # *
-                   'COMMA',  # ,
+    'ASTERISK',        # *
+    'COMMA',           # ,
+    'SEMICOLON',       # ;
 
-                   'LPAREN',  # (
-                   'RPAREN',  # )
-               ] + list(RESERVED.values())
+    'LPAREN',          # (
+    'RPAREN',          # )
+] + list(RESERVED.values())
