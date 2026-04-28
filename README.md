@@ -29,6 +29,7 @@ W poniższej tabeli zestawiono wszystkie leksemy obsługiwane przez projektowany
 | | `LESS` | `<` | Ostro mniejsze |
 | **Symbole** | `ASTERISK` | `\*` | Wybór wszystkich kolumn |
 | | `COMMA` | `,` | Separator na liście kolumn |
+| | `SEMICOLON` | `;` | Separator między podzapytaniami |
 | **Literały i Typy** | `FLOAT` | `-?\d+\.\d+` | Np. `3.14`, `-0.5` |
 | | `INTEGER` | `-?\d+` | Np. `42`, `-7` |
 | | `STRING` | `"[^"]*"` \| `'[^']*'` | Np. `"dane.csv"`, `'Kowalski'` |
