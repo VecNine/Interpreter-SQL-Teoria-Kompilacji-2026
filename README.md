@@ -35,7 +35,7 @@ W poniższej tabeli zestawiono wszystkie leksemy obsługiwane przez projektowany
 | **Identyfikatory** | `IDENTIFIER` | `[a-zA-Z_][a-zA-Z0-9_]*` | Nazwy kolumn, np. `imie`, `wiek` |
 
 
-### 5.2. Notacja generatora PLY
+### Notacja generatora PLY
 
 Poniżej przedstawiono gramatykę zapisaną w notacji `YACC`:
 
