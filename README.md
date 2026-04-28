@@ -1,6 +1,6 @@
 # Interpreter-SQL---Teoria-Kompilacji-2026
 
-# Założenia programu - CSV-SQL Transpiler - wstępny opis 
+# Założenia programu - CSV-SQL Transpiler  
 
 * **Ogólne cele programu:** Stworzenie narzędzia do analizy i zarządzania danymi w plikach tekstowych. Program pozwala na wykonywanie operacji SQL (podzbiór obejmujący: `SELECT`, `INSERT`, `DELETE`, `CREATE` wraz z klauzulami `WHERE`, `ORDER BY` i `LIMIT`) bezpośrednio na plikach `.csv` bez użycia relacyjnych baz danych.
 * **Rodzaj translatora:** Kompilator źródło-źródło (transpiler) pełniący w trybie runtime rolę interpretera.
