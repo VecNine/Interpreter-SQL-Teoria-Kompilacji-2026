@@ -210,3 +210,7 @@ __marimo__/
 lexer/.DS_Store
 parser/.DS_Store
 .DS_Store
+
+# PLY generated files
+parser/parsetab.py
+parser/parser.out

@@ -10,9 +10,10 @@ if __name__ == '__main__':
                 FROM "pracownicy.csv"
                 WHERE wiek >= 18
                   AND wyplata < 5000.50
-                ORDER BY nazwisko DESC LIMIT 10
+                ORDER BY nazwisko DESC LIMIT 10;
                 '''
 
     wynik = parser.parse(sql_query, lexer=lexer)
 
-    pprint.pprint(wynik)
+    if wynik:
+        print(wynik)
