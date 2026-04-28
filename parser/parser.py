@@ -260,5 +260,15 @@ def p_column_list_items_insert_multiple(p) -> None:
     p[1].append(p[4])
     p[0] = p[1]
 
+# =======================================
+#           REGUŁY DELETE
+# =======================================
+def p_query_delete(p) -> None:
+    '''query : DELETE FROM STRING where_clause'''
+    p[0] = {
+        'type': 'DELETE',
+        'from': p[3],
+        'where': p[4]
+    }
 
 parser = yacc.yacc()
