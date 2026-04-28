@@ -40,7 +40,7 @@ Poniżej przedstawiono gramatykę zapisaną w notacji `YACC`:
 
 ```/* Deklaracja tokenów */
 %token SELECT FROM WHERE ORDER BY ASC DESC LIMIT AND OR
-%token INSERT INTO VALUES CREATE DROP TABLE
+%token INSERT INTO VALUES CREATE DROP TABLE DELETE
 %token VARCHAR NUMERIC DATE DEFAULT CURRENT_DATE
 %token IDENTIFIER STRING INTEGER FLOAT
 %token EQUALS NOT_EQUALS GREATER LESS GREATER_EQUALS LESS_EQUALS
@@ -69,6 +69,7 @@ query
     | DROP TABLE IDENTIFIER
     | CREATE TABLE IDENTIFIER LPAREN column_list_def_create RPAREN
     | INSERT INTO IDENTIFIER LPAREN column_list_args_insert RPAREN VALUES column_list_items_insert
+    | DELETE FROM STRING where_clause /* <--- DODAJ TĘ LINIĘ */
     ;
 
 /* --- Logika SELECT --- */
