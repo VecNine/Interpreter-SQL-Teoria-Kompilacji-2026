@@ -8,22 +8,46 @@ RESERVED: dict = {
     'desc': 'DESC',
     'limit': 'LIMIT',
     'and': 'AND',
-    'or': 'OR'
+    'or': 'OR',
+
+    # Komendy edytowania i tworzenia CSV
+    'create': 'CREATE',
+    'table': 'TABLE',
+    'insert': 'INSERT',
+    'into': 'INTO',
+    'values': 'VALUES',
+    'delete': 'DELETE',
+
+    # Typy i własności
+    'varchar': 'VARCHAR',
+    'numeric': 'NUMERIC',
+    'date': 'DATE',
+    'default': 'DEFAULT',
+    'current_date': 'CURRENT_DATE',
+
+    'primary': 'PRIMARY',
+    'key': 'KEY',
+    'not': 'NOT',
+    'null': 'NULL',
+    'serial': 'SERIAL'
 }
 
 TOKENS: list = [
-    'IDENTIFIER',
-    'STRING',
-    'INTEGER',
-    'FLOAT',
+                   'IDENTIFIER',
+                   'STRING',
+                   'INTEGER',
+                   'FLOAT',
 
-    'EQUALS',           # =
-    'NOT_EQUALS',       # !=
-    'GREATER',          # >
-    'LESS',             # <
-    'GREATER_EQUALS',   # >=
-    'LESS_EQUALS',      # <=
+                   'EQUALS',  # =
+                   'NOT_EQUALS',  # !=
+                   'GREATER',  # >
+                   'LESS',  # <
+                   'GREATER_EQUALS',  # >=
+                   'LESS_EQUALS',  # <=
 
-    'ASTERISK',         # *
-    'COMMA'             # ,
-] + list(RESERVED.values())
+                   'ASTERISK',  # *
+                   'COMMA',  # ,
+
+                   'LPAREN',  # (
+                   'RPAREN',  # )
+               ] + list(RESERVED.values())

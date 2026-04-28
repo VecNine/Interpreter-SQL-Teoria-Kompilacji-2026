@@ -14,6 +14,8 @@ t_GREATER        = r'>'
 t_LESS           = r'<'
 t_ASTERISK       = r'\*'
 t_COMMA          = r','
+t_LPAREN         = r'\('
+t_RPAREN         = r'\)'
 
 def t_FLOAT(t) -> LexToken:
     r'\d+\.\d+'
