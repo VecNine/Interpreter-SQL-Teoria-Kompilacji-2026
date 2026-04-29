@@ -51,8 +51,28 @@ class CSVEngine:
         else:
             print("Brak zapytań do wyświetlenia.")
 
-    def select(self,query):
-        print(query)
+    def check_condtition(self, row, conditions) -> bool:
+        if conditions is None:
+            return True
+
+        type = conditions[0]
+
+    def select(self, query):
+        file_name = query['from']
+        columns_to_show = query['select']
+        conditions = query['where']
+        order_by = query['order']
+        limit = query['limit']
+
+        try:
+            with open(file_name, 'r', encoding='utf8') as file:
+                reader = csv.DictReader(file)
+                data = list(reader)
+                print(data)
+
+            filtered_data = [row for row in data if self.check_condition(row, conditions)]
+        except FileNotFoundError:
+            print("nima pliku")
 
     def insert(self, query):
         print(query)
