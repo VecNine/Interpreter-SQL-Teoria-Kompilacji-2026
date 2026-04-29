@@ -1,5 +1,6 @@
 from parser.parser import parser
 from lexer.lexer import lexer
+import csv
 
 class CSVEngine:
     query_path : str
@@ -51,11 +52,38 @@ class CSVEngine:
         else:
             print("Brak zapytań do wyświetlenia.")
 
-    def check_condtition(self, row, conditions) -> bool:
+    def check_condition(self, row, conditions) -> bool:
         if conditions is None:
             return True
 
         type = conditions[0]
+        if type == 'LOGIC':
+            _, operator, left, right = conditions
+            if operator == 'AND':
+                return self.check_condition(row,left) and self.check_condition(row,right)
+            else:
+                return self.check_condition(row,left) or self.check_condition(row,right)
+        elif type == 'RELATION':
+            _, operator,column , value = conditions
+
+            cell_value = row.get(column)
+
+            try:
+                if isinstance(value, (int, float)):
+                    cell_value = float(cell_value)
+            except (ValueError, TypeError):
+                pass
+
+            match operator:
+                case '<': return cell_value < value
+                case '<=': return cell_value <= value
+                case '>': return cell_value > value
+                case '>=': return cell_value >= value
+                case '=' : return cell_value == value
+                case '!=' : return cell_value != value
+
+        return False
+
 
     def select(self, query):
         file_name = query['from']
@@ -71,8 +99,32 @@ class CSVEngine:
                 print(data)
 
             filtered_data = [row for row in data if self.check_condition(row, conditions)]
+
+            if order_by:
+                col, direction = order_by
+                filtered_data.sort(
+                    key = lambda x: x.get(col, ""),
+                    reverse=(direction == "desc")
+                )
+
+            if limit is not None:
+                filtered_data = filtered_data[:limit]
+
+            self._display_results(filtered_data, columns_to_show)
+
         except FileNotFoundError:
             print("nima pliku")
+
+    def _display_results(self, data, columns):
+        if not data:
+            print("brak wynikow")
+            return
+        header = data[0].keys() if columns == '*' else columns
+        print(" | ".join(header))
+        print("-" * (len(header) * 15))
+
+        for row in data:
+            print(" | ".join(str(row.get(col, "")) for col in header))
 
     def insert(self, query):
         print(query)
