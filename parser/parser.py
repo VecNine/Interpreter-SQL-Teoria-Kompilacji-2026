@@ -1,4 +1,7 @@
 import ply.yacc as yacc
+from ply import lex
+
+from errors.errors import SqlSyntaxError
 from lexer.lexer import tokens
 from lexer.lexer import lexer
 
@@ -164,13 +167,6 @@ def p_empty(p) -> None:
     '''empty :'''
     pass
 
-def p_error(p) -> None:
-    if p:
-        print(f"Błąd składniowy w pobliżu tokena '{p.value}' (Typ: {p.type}, Linia: {p.lineno})")
-    else:
-        print("Błąd składniowy na końcu pliku (niekompletne zapytanie).")
-
-
 
 # =======================================
 #           REGUŁY CREATE
@@ -270,5 +266,37 @@ def p_query_delete(p) -> None:
         'from': p[3],
         'where': p[4]
     }
+
+
+# =======================================
+#               BŁEDY
+# =======================================
+
+def p_error(p: lex.LexToken | None) -> None:
+    if p:
+        line_start = p.lexer.lexdata.rfind('\n', 0, p.lexpos) + 1
+        column = (p.lexpos - line_start) + 1
+
+        expected_tokens = []
+        if hasattr(parser, 'statestack') and hasattr(parser, 'action'):
+            state = parser.statestack[-1]
+
+            expected_tokens = [
+                tok for tok in parser.action[state].keys()
+                if tok not in ('$end', 'error')
+            ]
+
+        expected_str = ", ".join(expected_tokens)
+
+        error_msg = (
+            f"Błąd składniowy w linii {p.lineno}, kolumnie {column}.\n"
+            f"Nieoczekiwany token: '{p.value}' (Typ: {p.type}).\n"
+        )
+        if expected_str:
+            error_msg += f"Spodziewano się jednego z: {expected_str}"
+
+        raise SqlSyntaxError(error_msg)
+    else:
+        raise SqlSyntaxError("Błąd składniowy: Niespodziewany koniec zapytania (brak średnika?).")
 
 parser = yacc.yacc()

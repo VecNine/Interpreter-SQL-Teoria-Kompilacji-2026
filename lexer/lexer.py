@@ -1,5 +1,7 @@
 import ply.lex as lex
 from ply.lex import LexToken
+
+from errors.errors import SqlSyntaxError
 from lexer.tokens_lexer import TOKENS, RESERVED
 
 tokens = TOKENS
@@ -43,7 +45,12 @@ def t_IDENTIFIER(t) -> LexToken:
     return t
 
 def t_error(t) -> None:
-    print(f"Błąd leksykalny: Nielegalny znak '{t.value[0]}' w linii {t.lineno}, pozycja {t.lexpos}")
-    t.lexer.skip(1)
+    line_start = t.lexer.lexdata.rfind('\n', 0, t.lexpos) + 1
+    column = (t.lexpos - line_start) + 1
+
+    raise SqlSyntaxError(
+        f"Błąd leksykalny w linii {t.lineno}, kolumnie {column}: "
+        f"Nielegalny znak '{t.value[0]}'"
+    )
 
 lexer = lex.lex()
