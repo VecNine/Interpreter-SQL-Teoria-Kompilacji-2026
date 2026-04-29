@@ -12,12 +12,12 @@ RESERVED: dict = {
 
     # Komendy edytowania i tworzenia CSV
     'create': 'CREATE',
+    'drop': 'DROP',
     'table': 'TABLE',
     'insert': 'INSERT',
     'into': 'INTO',
     'values': 'VALUES',
     'delete': 'DELETE',
-    'drop': 'DROP',
 
     # Typy i własności
     'varchar': 'VARCHAR',
