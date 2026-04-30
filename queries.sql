@@ -1,7 +1,7 @@
 SELECT imie, nazwisko, wyplata
         FROM "pracownicy.csv"
         WHERE wiek >= 18
-        AND wyplata < 5000.50
+        AND wyplata < 10000000.0
         ORDER BY nazwisko DESC LIMIT 10;
 
 

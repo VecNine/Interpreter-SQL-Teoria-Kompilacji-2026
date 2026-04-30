@@ -1,27 +1,23 @@
+import pandas as pd
+
+from controllers.components.query_response import QueryResponse
+from errors.errors import SqlSyntaxError
 from parser.parser import parser
 from lexer.lexer import lexer
 import csv
 
 class CSVEngine:
-    query_path : str
+    query : str
     parsed : list[dict]
 
-    def __init__(self, path):
+    def __init__(self, query):
         self.parsed = []
-        self.query_path = path
+        self.query = query
 
     def parse(self):
-        try:
-            with open(self.query_path, 'r', encoding='utf-8') as file:
-                sql_script = file.read()
-            print(f"--- Wczytano skrypt z pliku: {self.query_path} ---")
-            self.parsed = parser.parse(sql_script, lexer=lexer)
+        print(f"--- Wczytano skrypt ---")
+        self.parsed = parser.parse(self.query, lexer=lexer)
 
-
-        except FileNotFoundError:
-            print(f"Błąd: Nie znaleziono pliku {self.query_path}")
-        except Exception as e:
-            print(f"Wystąpił nieoczekiwany błąd: {e}")
 
     def print_queries(self):
         if self.parsed:
@@ -36,21 +32,26 @@ class CSVEngine:
             for query in self.parsed:
                 match query['type']:
                     case 'SELECT':
-                        self.select(query)
+                        response =  self.select(query)
                     case 'INSERT':
                         self.insert(query)
-
+                        response = self.select(query)
                     case 'CREATE':
                         self.create(query)
-
+                        response = self.select(query)
                     case 'DROP':
                         self.drop(query)
-
+                        response = self.select(query)
                     case 'DELETE':
                         self.delete(query)
+                    case _:
+                        response = QueryResponse(status='error', message='idk', data = None)
+
 
         else:
+            response = QueryResponse(status='error', message='cos poszło nie tak', data=None)
             print("Brak zapytań do wyświetlenia.")
+        return response
 
     def check_condition(self, row, conditions) -> bool:
         if conditions is None:
@@ -103,28 +104,47 @@ class CSVEngine:
             if order_by:
                 col, direction = order_by
                 filtered_data.sort(
-                    key = lambda x: x.get(col, ""),
-                    reverse=(direction == "desc")
+                    key = lambda x: float(x.get(col, "")),
+                    reverse=(direction == "DESC")
                 )
 
             if limit is not None:
                 filtered_data = filtered_data[:limit]
 
-            self._display_results(filtered_data, columns_to_show)
+            if filtered_data:
+                df = pd.DataFrame(filtered_data)
+
+                if columns_to_show != '*':
+                    missing_cols = [c for c in columns_to_show if c not in df.columns]
+
+                    if missing_cols:
+                        return QueryResponse(
+                            status='error',
+                            message=f"Błąd: Nie znaleziono kolumn: {', '.join(missing_cols)}",
+                            data=None
+                        )
+                    df = df[columns_to_show]
+
+                return QueryResponse(status='success', message='Pobrano dane pomyślnie', data=df)
+            else:
+                return QueryResponse(status='success', message='Brak wyników spełniających kryteria',
+                                     data=pd.DataFrame())
+
+            # self._display_results(filtered_data, columns_to_show)
 
         except FileNotFoundError:
-            print("nima pliku")
+            return QueryResponse(status='error', message=str(SqlSyntaxError), data = None)
 
-    def _display_results(self, data, columns):
-        if not data:
-            print("brak wynikow")
-            return
-        header = data[0].keys() if columns == '*' else columns
-        print(" | ".join(header))
-        print("-" * (len(header) * 15))
-
-        for row in data:
-            print(" | ".join(str(row.get(col, "")) for col in header))
+    # def _display_results(self, data, columns):
+    #     if not data:
+    #         print("brak wynikow")
+    #         return
+    #     header = data[0].keys() if columns == '*' else columns
+    #     print(" | ".join(header))
+    #     print("-" * (len(header) * 15))
+    #
+    #     for row in data:
+    #         print(" | ".join(str(row.get(col, "")) for col in header))
 
     def insert(self, query):
         print(query)

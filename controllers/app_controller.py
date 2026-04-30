@@ -1,7 +1,10 @@
 from dataclasses import dataclass
+from warnings import catch_warnings
+
 from pyexpat.errors import messages
 from typing import Any
 import pandas as pd
+from streamlit import exception
 
 from controllers.components.query_response import QueryResponse
 from controllers.config.config import markdown_conf
@@ -69,31 +72,42 @@ class AppController:
     def return_response(sql_query: str) -> QueryResponse:
         """Przyjmuje SQL Query, zwraca QueryResponse"""
 
+
+        engine = CSVEngine(sql_query)
+        try:
+            engine.parse()
+        except Exception as e:
+            return QueryResponse(status='error', message=str(e), data = None)
+
+        queryResponse = engine.execute()
+
+        return queryResponse
+
         # To jest taki tymczasowy, abym miał jak testowac
-        df_mock = pd.DataFrame({
-            "abc": [1, 2, 3],
-            "bcd": [2, 3, 5],
-            "efd": [2, 34, 4]
-        })
-
-        # Tutaj masz przyklady zwracanych QueryResponse
-
-        usun_tego_stringa_i_if_ponizej: str = "ostrzezenie"
-        if usun_tego_stringa_i_if_ponizej == "sukces":
-            return QueryResponse(
-                status="success",
-                message="",
-                data=df_mock
-            )
-        if usun_tego_stringa_i_if_ponizej == "blad":
-            return QueryResponse(
-                status="error",
-                message="Tutaj jakis blad",
-                data=None
-            )
-        if usun_tego_stringa_i_if_ponizej == "ostrzezenie":
-            return QueryResponse(
-                status="warning",
-                message="Tutaj jakies ostrzezenie",
-                data=df_mock
-            )
+        # df_mock = pd.DataFrame({
+        #     "abc": [1, 2, 3],
+        #     "bcd": [2, 3, 5],
+        #     "efd": [2, 34, 4]
+        # })
+        #
+        # # Tutaj masz przyklady zwracanych QueryResponse
+        #
+        # usun_tego_stringa_i_if_ponizej: str = "ostrzezenie"
+        # if usun_tego_stringa_i_if_ponizej == "sukces":
+        #     return QueryResponse(
+        #         status="success",
+        #         message="",
+        #         data=df_mock
+        #     )
+        # if usun_tego_stringa_i_if_ponizej == "blad":
+        #     return QueryResponse(
+        #         status="error",
+        #         message="Tutaj jakis blad",
+        #         data=None
+        #     )
+        # if usun_tego_stringa_i_if_ponizej == "ostrzezenie":
+        #     return QueryResponse(
+        #         status="warning",
+        #         message="Tutaj jakies ostrzezenie",
+        #         data=df_mock
+        #     )
