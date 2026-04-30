@@ -6,7 +6,7 @@ class CSVEngine:
     query_path : str
     parsed : list[dict]
 
-    def __init__(self,path):
+    def __init__(self, path):
         self.parsed = []
         self.query_path = path
 
