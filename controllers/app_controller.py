@@ -76,9 +76,24 @@ class AppController:
             "efd": [2, 34, 4]
         })
 
-        return QueryResponse(
-            status="success",
-            message="",
-            ast=None,
-            data=df_mock
-        )
+        # Tutaj masz przyklady zwracanych QueryResponse
+
+        usun_tego_stringa_i_if_ponizej: str = "ostrzezenie"
+        if usun_tego_stringa_i_if_ponizej == "sukces":
+            return QueryResponse(
+                status="success",
+                message="",
+                data=df_mock
+            )
+        if usun_tego_stringa_i_if_ponizej == "blad":
+            return QueryResponse(
+                status="error",
+                message="Tutaj jakis blad",
+                data=None
+            )
+        if usun_tego_stringa_i_if_ponizej == "ostrzezenie":
+            return QueryResponse(
+                status="warning",
+                message="Tutaj jakies ostrzezenie",
+                data=df_mock
+            )

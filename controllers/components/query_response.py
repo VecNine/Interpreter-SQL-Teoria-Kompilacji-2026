@@ -6,5 +6,4 @@ class QueryResponse(BaseModel):
 
     status: str = Field(pattern="^(success|error|warning)$")
     message: str
-    ast: dict | None = None
     data: pd.DataFrame | None = None
