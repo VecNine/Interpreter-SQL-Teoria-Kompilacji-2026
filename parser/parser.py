@@ -42,7 +42,7 @@ def p_query_select(p) -> None:
     }
 
 def p_query_drop_table(p) -> None:
-    '''query : DROP TABLE IDENTIFIER'''
+    '''query : DROP TABLE STRING'''
     p[0] = {
         'type': 'DROP',
         'action': 'DROP TABLE',
@@ -50,7 +50,7 @@ def p_query_drop_table(p) -> None:
     }
 
 def p_query_create_table(p) -> None:
-    '''query : CREATE TABLE IDENTIFIER LPAREN column_list_def_create RPAREN'''
+    '''query : CREATE TABLE STRING LPAREN column_list_def_create RPAREN'''
     p[0] = {
         'type': 'CREATE',
         'action': 'CREATE TABLE',
@@ -59,7 +59,7 @@ def p_query_create_table(p) -> None:
     }
 
 def p_query_insert_table(p) -> None:
-    '''query : INSERT INTO IDENTIFIER LPAREN column_list_args_insert RPAREN VALUES column_list_items_insert'''
+    '''query : INSERT INTO STRING LPAREN column_list_args_insert RPAREN VALUES column_list_items_insert'''
     p[0] = {
         'type': 'INSERT',
         'action': 'INSERT',

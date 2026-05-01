@@ -1,4 +1,5 @@
 import pandas as pd
+from streamlit import status
 
 from controllers.components.query_response import QueryResponse
 from errors.errors import SqlSyntaxError
@@ -34,16 +35,16 @@ class CSVEngine:
                     case 'SELECT':
                         response =  self.select(query)
                     case 'INSERT':
-                        self.insert(query)
-                        response = self.select(query)
+                        response = self.insert(query)
                     case 'CREATE':
-                        self.create(query)
-                        response = self.select(query)
+                        print("do implementacji")
+                        # response = self.create(query)
                     case 'DROP':
-                        self.drop(query)
-                        response = self.select(query)
+                        print("do implementacji")
+                        # response = self.drop(query)
                     case 'DELETE':
-                        self.delete(query)
+                        print("do implementacji")
+                        # response = self.drop(query)
                     case _:
                         response = QueryResponse(status='error', message='idk', data = None)
 
@@ -103,8 +104,16 @@ class CSVEngine:
 
             if order_by:
                 col, direction = order_by
+
+                def safe_sort_key(x):
+                    val = x.get(col, "")
+                    try:
+                        return float(val)
+                    except (ValueError, TypeError):
+                        return str(val)
+
                 filtered_data.sort(
-                    key = lambda x: float(x.get(col, "")),
+                    key=safe_sort_key,
                     reverse=(direction == "DESC")
                 )
 
@@ -147,7 +156,54 @@ class CSVEngine:
     #         print(" | ".join(str(row.get(col, "")) for col in header))
 
     def insert(self, query):
-        print(query)
+        table_name : str
+        table_name = query['table_name']
+        columns = query['columns']
+        values = query['values']
+
+        if not table_name.lower().endswith('.csv'):
+            table_name += '.csv'
+
+        try:
+            with open(table_name, mode='r', encoding='utf8') as f:
+                reader = csv.reader(f)
+                file_headers = next(reader)
+
+            for col in columns:
+                if col not in file_headers:
+                    return QueryResponse(status='error', message=f"Kolumna '{col}' nie istnieje w {table_name}",
+                                         data=None)
+            rows_to_write = []
+            for i, row in enumerate(values):
+                if len(columns) != len(row):
+                    return QueryResponse(
+                        status = 'error',
+                        message = f'Błąd w rekordzie nr {i+1}. Niepoprawna ilość argumentów. Podano {len(row)} a oczekiwano {len(columns)}',
+                        data = None
+                    )
+                row_map = dict(zip(columns,row))
+                mapped_values = [row_map.get(header,'') for header in file_headers]
+                rows_to_write.append(mapped_values)
+
+            with open(table_name, mode = 'a', newline='', encoding = 'utf8' ) as file:
+                writer = csv.writer(file)
+                writer.writerows(rows_to_write)
+            return QueryResponse(
+                status = 'success',
+                message = 'Pomyślnie dodano podane wartości',
+                data = None
+            )
+
+
+        except FileNotFoundError:
+
+            return QueryResponse(status='error', message=f"Nie znaleziono pliku: {table_name}", data=None)
+
+        except Exception as e:
+
+            return QueryResponse(status='error', message=f"Błąd krytyczny zapisu: {str(e)}", data=None)
+
+
 
     def create(self,query):
         print(query)

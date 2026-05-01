@@ -68,9 +68,9 @@ query
     : SELECT column_list FROM STRING where_clause order_clause limit_clause
     | DROP TABLE IDENTIFIER
     | CREATE TABLE IDENTIFIER LPAREN column_list_def_create RPAREN
-    | INSERT INTO IDENTIFIER LPAREN column_list_args_insert RPAREN VALUES column_list_items_insert
+    | INSERT INTO STRING LPAREN column_list_args_insert RPAREN VALUES column_list_items_insert
     | DELETE FROM STRING where_clause /* <--- DODAJ TĘ LINIĘ */
-    ;
+    ;   
 
 /* --- Logika SELECT --- */
 column_list
