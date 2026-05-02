@@ -215,3 +215,7 @@ parser/.DS_Store
 # PLY generated files
 parser/parsetab.py
 parser/parser.out
+
+# --- SQL Interpreter Data ---
+*.csv
+*.meta.json
