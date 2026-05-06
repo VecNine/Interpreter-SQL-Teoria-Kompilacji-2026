@@ -99,8 +99,10 @@ with st.container(border=True):
             st.success(st.session_state.last_status)
 
     with st.form("sql_form", border=False):
-        st.text_input(
+        st.text_area(
             "Query:",
-            key="sql_editor"
+            key="sql_editor",
+            height=150,
+            help="Użyj Enter dla nowej linii. Formularz wyślesz przyciskiem lub Ctrl+Enter."
         )
         st.form_submit_button("Wykonaj", on_click=app_controller.execute_sql_callback)

@@ -52,8 +52,9 @@ class AppController:
 
                 if query_response.status == "success":
                     self.last_dataframe = query_response.data
+                    self.st.session_state.last_status = f"✅ Sukces! {query_response.message}"
                 if query_response.status == "error":
-                    self.st.session_state.last_status = f"❌ Błąd: {query_response.message}"
+                    self.st.session_state.last_status = f"❌ {query_response.message}"
                 if query_response.status == "warning":
                     self.last_dataframe = query_response.data
                     self.st.session_state.last_status = f"⚠️ Ostrzeżenie: {query_response.message}"

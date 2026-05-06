@@ -49,7 +49,7 @@ def t_error(t) -> None:
     column = (t.lexpos - line_start) + 1
 
     raise SqlSyntaxError(
-        f"Błąd leksykalny w linii {t.lineno}, kolumnie {column}: "
+        f"Błąd leksykalny w linii {t.lineno}, znak {column}: "
         f"Nielegalny znak '{t.value[0]}'"
     )
 

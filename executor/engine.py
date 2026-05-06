@@ -8,6 +8,7 @@ from lexer.lexer import lexer
 import csv
 import json
 import os
+import re
 
 class CSVEngine:
     query : str
@@ -210,6 +211,7 @@ class CSVEngine:
                                 return QueryResponse(status='error',
                                                      message=f"Błąd: Wartość '{val}' przekracza długość {col_def['length']} dla kolumny {col_name}",
                                                      data=None)
+
                         if col_def['type'] == 'NUMERIC':
                             try:
                                 float(val)
@@ -217,6 +219,14 @@ class CSVEngine:
                                 return QueryResponse(status='error',
                                                      message=f"Błąd: Kolumna {col_name} wymaga liczby, otrzymano '{val}'",
                                                      data=None)
+
+                        if col_def['type'] == 'DATE':
+                            if not self.validate_date_format(val):
+                                return QueryResponse(
+                                    status='error',
+                                    message=f"Błąd: Kolumna {col_name} wymaga formatu ROK-MIESIĄC(1-12)-DZIEŃ(1-31), otrzymano '{val}'",
+                                    data=None
+                                )
 
                 mapped_values = []
                 for header in file_headers:
@@ -321,3 +331,13 @@ class CSVEngine:
             return QueryResponse(status='error', message=f"Plik '{file_name}' nie istnieje.", data=None)
         except Exception as e:
             return QueryResponse(status='error', message=f"Błąd podczas DELETE: {str(e)}", data=None)
+
+    @staticmethod
+    def validate_date_format(date_str):
+        """
+        Proste sprawdzanie poprawności daty.
+        Obsługuje formaty YYYY-MM-DD oraz YYYY-M-D
+        """
+
+        pattern = r"^\d+-(0?[1-9]|1[0-2])-(0?[1-9]|[12]\d|3[01])$"
+        return bool(re.match(pattern, str(date_str)))

@@ -289,7 +289,7 @@ def p_error(p: lex.LexToken | None) -> None:
         expected_str = ", ".join(expected_tokens)
 
         error_msg = (
-            f"Błąd składniowy w linii {p.lineno}, kolumnie {column}.\n"
+            f"Błąd składniowy w linii {p.lineno}, znak {column}.\n"
             f"Nieoczekiwany token: '{p.value}' (Typ: {p.type}).\n"
         )
         if expected_str:
