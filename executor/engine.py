@@ -31,6 +31,7 @@ class CSVEngine:
 
     def execute(self):
         print("execute")
+        response = QueryResponse(status = 'error', message= "problem z typem", data = None)
         if self.parsed:
             for query in self.parsed:
                 match query['type']:
@@ -39,14 +40,11 @@ class CSVEngine:
                     case 'INSERT':
                         response = self.insert(query)
                     case 'CREATE':
-                        print("do implementacji")
                         response = self.create(query)
                     case 'DROP':
-                        print("do implementacji")
-                        # response = self.drop(query)
+                        response = self.drop(query)
                     case 'DELETE':
-                        print("do implementacji")
-                        # response = self.drop(query)
+                        response = self.delete(query)
                     case _:
                         response = QueryResponse(status='error', message='idk', data = None)
 
@@ -271,7 +269,55 @@ class CSVEngine:
             return QueryResponse(status='error', message=f"Błąd CREATE: {str(e)}", data=None)
 
     def drop(self,query):
-        print(query)
+        table_name = query['table_name']
+
+        if not table_name.lower().endswith('.csv'):
+            table_name += '.csv'
+
+        meta_file = table_name + ".meta.json"
+        try:
+            os.remove(table_name)
+            if os.path.exists(meta_file):
+                os.remove(meta_file)
+                msg = f"Pomyślnie usunięto tabelę '{table_name}' wraz z metadanymi."
+            else:
+                msg = f"Pomyślnie usunięto tabelę '{table_name}'."
+            return QueryResponse(status='success', message=msg, data=None)
+        except PermissionError:
+            return QueryResponse(status='error',
+                                 message=f"Brak uprawnień do usunięcia pliku {table_name}. Zamknij go w innym programie.",
+                                 data=None)
+        except FileNotFoundError:
+            return QueryResponse(status = 'error', message= f"Nie ma takiego pliku jak {table_name}",data=None)
+        except Exception as e:
+            return QueryResponse(status = 'error', message= f"{e}", data = None)
 
     def delete(self,query):
-        print(query)
+        file_name = query['from']
+        conditions = query['where']
+        if not file_name.lower().endswith('.csv'):
+            file_name += '.csv'
+        try:
+            with open(file_name, 'r', encoding='utf8') as file:
+                reader = csv.DictReader(file)
+                headers = reader.fieldnames
+                data = list(reader)
+                print(data)
+
+            remaining_data = [row for row in data if not self.check_condition(row, conditions)]
+
+            deleted_count = len(data) - len(remaining_data)
+
+            with open(file_name, 'w', newline='', encoding = 'utf8') as file:
+                writer = csv.DictWriter(file, fieldnames=headers)
+                writer.writeheader()
+                writer.writerows(remaining_data)
+            return QueryResponse(
+                status='success',
+                message=f"Pomyślnie usunięto {deleted_count} wierszy z '{file_name}'.",
+                data=None
+            )
+        except FileNotFoundError:
+            return QueryResponse(status='error', message=f"Plik '{file_name}' nie istnieje.", data=None)
+        except Exception as e:
+            return QueryResponse(status='error', message=f"Błąd podczas DELETE: {str(e)}", data=None)
